@@ -51,19 +51,20 @@ def index():
         if i % 7 == 0 and i != 0:
             level += 1
 
-        if i % 4 == 0:
+        mod = i % 4
+        if mod == 0:
             title = "Баланс та стабільність"
             exercises = [
                 {"name": "Стояння біля стіни", "time": f"{10 + level*3} сек", "sets": "3 підходи"},
                 {"name": "Балансування без стіни", "time": f"{2 + level*1} сек", "sets": "2 спроби"},
             ]
-        elif i % 4 == 1:
+        elif mod == 1:
             title = "Сила та витривалість"
             exercises = [
                 {"name": "Віджимання у стійці біля стіни", "reps": f"{3 + level} повторень", "sets": "3 підходи"},
                 {"name": "Планка на руках", "time": f"{20 + level*5} сек", "sets": "3 підходи"},
             ]
-        elif i % 4 == 2:
+        elif mod == 2:
             title = "Контроль тіла"
             exercises = [
                 {"name": "Переходи з ноги на ногу у стійці", "time": f"{10 + level*3} сек", "sets": "2 підходи"},
@@ -76,7 +77,7 @@ def index():
                 {"name": "Дихальна практика", "time": "2 хв", "sets": "1 раз"},
             ]
 
-        done = progress.get(str(day_date), False)
+        done = progress.get(day_date.strftime("%Y-%m-%d"), False)
 
         workouts.append({
             "date": day_date.strftime("%Y-%m-%d"),
