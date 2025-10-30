@@ -19,17 +19,29 @@ def save_progress(data):
 
 @app.route('/')
 def index():
+    print("🔄 Вхід у маршрут '/'")
+
     start_date = date(2025, 10, 11)
     end_date = date(2026, 1, 28)
     total_days = (end_date - start_date).days + 1
+
+    print(f"📅 Генеруємо {total_days} днів тренувань")
 
     progress = load_progress()
     workouts = []
     level = 1
 
     # Вибір фону за днем тижня
-    day_number = datetime.now().weekday() # 0 = понеділок
+    day_number = datetime.now().weekday()  # 0 = понеділок
     chosen_bg = f"images/background{day_number+1}.jpg"
+
+    # Перевірка чи файл існує
+    bg_path = os.path.join("static", chosen_bg)
+    if not os.path.exists(bg_path):
+        print(f"⚠️ Файл фону не знайдено: {bg_path}, використовую резервний")
+        chosen_bg = "images/background1.jpg"
+    else:
+        print(f"🖼️ Використовується фон: {chosen_bg}")
 
     for i in range(total_days):
         day_date = start_date + timedelta(days=i)
@@ -67,12 +79,13 @@ def index():
         done = progress.get(str(day_date), False)
 
         workouts.append({
-            "date": day_date.strftime("%Y-%m-%d"),  # формат для шаблону
+            "date": day_date.strftime("%Y-%m-%d"),
             "title": title,
             "exercises": exercises,
             "done": done
         })
 
+    print(f"📦 Передача шаблону з {len(workouts)} днями")
     return render_template("index.html", workouts=workouts, background=chosen_bg)
 
 @app.route("/complete/<string:day>")
