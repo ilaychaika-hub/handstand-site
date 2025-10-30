@@ -3,5 +3,5 @@ services:
     name: handstand-site
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    startCommand: bash start.sh
     plan: free
