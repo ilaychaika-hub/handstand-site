@@ -3,39 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <title>Тренування до стійки на руках</title>
-  <!-- Підключення зовнішнього CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body style="background-image: url('{{ url_for('static', filename=background) }}');">
+<body {% if background %}style="background-image: url('{{ url_for('static', filename=background) }}');"{% endif %}>
 
-  <!-- Темний прозорий шар над фоном -->
   <div class="overlay"></div>
 
-  <!-- Контейнер для всього контенту -->
   <div class="container">
     <h1>🔥 Тренування до стійки на руках</h1>
 
-    {% for workout in workouts %}
-      <div class="day {% if workout.done %}done{% endif %}">
-        <h2>{{ workout.date }}</h2>
-        <h3>{{ workout.title }}</h3>
-        <ul>
-          {% for ex in workout.exercises %}
-            <li>
-              {{ ex.name }} —
-              {% if ex.reps %}{{ ex.reps }}{% endif %}
-              {% if ex.time %}{{ ex.time }}{% endif %}, {{ ex.sets }}
-            </li>
-          {% endfor %}
-        </ul>
+    {% if workouts %}
+      {% for workout in workouts %}
+        <div class="day {% if workout.done %}done{% endif %}">
+          <h2>{{ workout.date }}</h2>
+          <h3>{{ workout.title }}</h3>
+          <ul>
+            {% for ex in workout.exercises %}
+              <li>
+                {{ ex.name }} —
+                {% if ex.reps %}{{ ex.reps }}{% endif %}
+                {% if ex.time %}{{ ex.time }}{% endif %}, {{ ex.sets }}
+              </li>
+            {% endfor %}
+          </ul>
 
-        {% if not workout.done %}
-          <a class="button" href="/complete/{{ workout.date }}">✅ Завершити день</a>
-        {% else %}
-          <p style="color: lightgreen;">✅ Виконано</p>
-        {% endif %}
-      </div>
-    {% endfor %}
+          {% if not workout.done %}
+            <a class="button" href="/complete/{{ workout.date }}">✅ Завершити день</a>
+          {% else %}
+            <p style="color: lightgreen;">✅ Виконано</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>Немає доступних тренувань.</p>
+    {% endif %}
   </div>
 </body>
 </html>
