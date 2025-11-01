@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for
 from datetime import date, timedelta, datetime
 import json
 import os
+from streak import calculate_streak, get_streak_color
 
 app = Flask(__name__)
 PROGRESS_FILE = "progress.json"
@@ -77,7 +78,6 @@ def index():
         })
 
     today = datetime.now().date()
-    current_week = (today - start_date).days // 7
     belly_all = [
         {"name": "Скручування", "reps": "20", "sets": "3 підходи"},
         {"name": "Планка", "time": "30–60 сек", "sets": "3 підходи"},
@@ -89,6 +89,7 @@ def index():
         {"name": "V-підйоми", "reps": "15", "sets": "3 підходи"},
         {"name": "Планка боком", "time": "30 сек", "sets": "2 підходи"}
     ]
+    current_week = (today - start_date).days // 7
     belly_exercises = belly_all[:min(len(belly_all), current_week + 3)]
     belly_key = today.strftime("%Y/%m/%d")
     belly_done = progress.get(belly_key, False)
@@ -101,13 +102,19 @@ def index():
         "Уникай солодкого, газованих напоїв, фастфуду"
     ]
 
+    streak_days = calculate_streak(progress, start_date, today)
+    streak_color = get_streak_color(streak_days)
+
     return render_template("index.html",
-                           workouts=workouts,
-                           background=chosen_bg,
-                           nutrition=nutrition,
-                           belly_exercises=belly_exercises,
-                           belly_date=belly_key,
-                           belly_done=belly_done)
+        workouts=workouts,
+        background=chosen_bg,
+        nutrition=nutrition,
+        belly_exercises=belly_exercises,
+        belly_date=belly_key,
+        belly_done=belly_done,
+        streak_days=streak_days,
+        streak_color=streak_color
+    )
 
 @app.route("/complete/<string:day>")
 def complete(day):
@@ -118,4 +125,4 @@ def complete(day):
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
-        app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

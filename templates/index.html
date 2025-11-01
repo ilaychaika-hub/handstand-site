@@ -15,6 +15,17 @@
   <div class="container">
     <div class="main">
       <h1>🔥 Тренування</h1>
+
+      {% if streak_days > 0 %}
+        <div class="streak" style="color: {{ streak_color }};">
+          🔥 Серія: {{ streak_days }} днів
+        </div>
+      {% else %}
+        <div class="streak" style="color: gray;">
+          Серія неактивна 😴
+        </div>
+      {% endif %}
+
       <p>Виконано днів: {{ workouts | selectattr('done') | select | list | length }} з {{ workouts|length }}</p>
 
       {% for workout in workouts %}
