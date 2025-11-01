@@ -4,7 +4,6 @@ import json
 import os
 
 app = Flask(__name__)
-
 PROGRESS_FILE = "progress.json"
 
 def load_progress():
@@ -42,13 +41,12 @@ def index():
             level += 1
 
         if i % 2 == 0:
-            # День тренування на стійку
             mod = i % 4
             if mod == 0:
                 title = "Баланс та стабільність"
                 exercises = [
                     {"name": "Стояння біля стіни", "time": f"{10 + level*3} сек", "sets": "3 підходи"},
-                    {"name": "Балансування без стіни", "time": f"{2 + level*1} сек", "sets": "2 спроби"},
+                    {"name": "Балансування без стіни", "time": f"{2 + level*1} хв", "sets": "2 спроби"},
                 ]
             elif mod == 1:
                 title = "Сила та витривалість"
@@ -69,7 +67,6 @@ def index():
                     {"name": "Дихальна практика", "time": "2 хв", "sets": "1 раз"},
                 ]
         else:
-            # День жироспалення
             title = "🔥 Спалювання жиру"
             exercises = [
                 {"name": "Бурпі", "reps": "10", "sets": "3 підходи"},
@@ -83,10 +80,11 @@ def index():
                 {"name": "Підйом ніг лежачи", "reps": "15", "sets": "3 підходи"},
             ]
 
-        done = progress.get(day_date.strftime("%Y-%m-%d"), False)
+        json_key = day_date.strftime("%Y/%m/%d")
+        done = progress.get(json_key, False)
 
         workouts.append({
-            "date": day_date.strftime("%Y-%m-%d"),
+            "date": json_key,
             "title": title,
             "exercises": exercises,
             "done": done
@@ -100,12 +98,32 @@ def index():
         "Уникай солодкого, газованих напоїв, фастфуду"
     ]
 
-    return render_template("index.html", workouts=workouts, background=chosen_bg, nutrition=nutrition)
+    belly_exercises_all = [
+        {"name": "Скручування", "reps": "20", "sets": "3 підходи"},
+        {"name": "Планка", "time": "30–60 сек", "sets": "3 підходи"},
+        {"name": "Підйом ніг лежачи", "reps": "15", "sets": "3 підходи"},
+        {"name": "Велосипед", "time": "30 сек", "sets": "3 підходи"},
+        {"name": "Планка з дотиком плечей", "time": "30 сек", "sets": "3 підходи"},
+        {"name": "Планка з підйомом ноги", "time": "30 сек", "sets": "3 підходи"},
+        {"name": "Пульсуючі скручування", "reps": "25", "sets": "3 підходи"},
+        {"name": "V-підйоми", "reps": "15", "sets": "3 підходи"},
+        {"name": "Планка боком", "time": "30 сек", "sets": "2 підходи"}
+    ]
+
+    current_week = (datetime.now().date() - start_date).days // 7
+    belly_exercises = belly_exercises_all[:min(len(belly_exercises_all), current_week + 3)]
+
+    return render_template("index.html",
+                           workouts=workouts,
+                           background=chosen_bg,
+                           nutrition=nutrition,
+                           belly_exercises=belly_exercises)
 
 @app.route("/complete/<string:day>")
 def complete(day):
+    json_key = day.replace("-", "/")
     progress = load_progress()
-    progress[day] = True
+    progress[json_key] = True
     save_progress(progress)
     return redirect(url_for("index"))
 
