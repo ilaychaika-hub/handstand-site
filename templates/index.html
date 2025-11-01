@@ -4,13 +4,20 @@
   <meta charset="UTF-8">
   <title>Тренування</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      background-image: url('{{ url_for('static', filename=background) }}');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+  </style>
 </head>
-<body {% if background %}style="background-image: url('{{ url_for('static', filename=background) }}');"{% endif %}>
+<body>
   <div class="overlay"></div>
 
   <div class="container">
-    <!-- Основний блок тренувань -->
-    <div style="flex: 3;">
+    <div class="main">
       <h1>🔥 Тренування</h1>
       <p>Виконано днів: {{ workouts | selectattr('done') | select | list | length }} з {{ workouts|length }}</p>
 
@@ -37,17 +44,16 @@
       {% endfor %}
     </div>
 
-    <!-- Блок харчування + жироспалення -->
     <aside>
-      <h2>🍽️ Харчування для спалювання жиру</h2>
+      <h2>🍽️ Харчування</h2>
       <ul>
         {% for item in nutrition %}
           <li>{{ item }}</li>
         {% endfor %}
       </ul>
-      <p><strong>Порада:</strong> Один день на тиждень — легка активність або відпочинок.</p>
 
-      <h2>🔥 Вправи для спалювання жиру на животі</h2>
+      <h2>🔥 Вправи для спалювання жиру</h2>
+      <p><strong>Дата:</strong> {{ belly_date }}</p>
       <ul>
         {% for ex in belly_exercises %}
           <li>
@@ -57,6 +63,12 @@
           </li>
         {% endfor %}
       </ul>
+
+      {% if not belly_done %}
+        <a class="button" href="{{ url_for('complete', day=belly_date.replace('/', '-') ) }}">✅ Завершити день</a>
+      {% else %}
+        <p style="color: lightgreen;">✅ Виконано</p>
+      {% endif %}
     </aside>
   </div>
 </body>
