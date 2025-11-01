@@ -14,6 +14,8 @@
       display: flex;
       gap: 30px;
       padding: 20px;
+      position: relative;
+      z-index: 1;
     }
     .day {
       background-color: rgba(255, 255, 255, 0.9);
@@ -40,6 +42,20 @@
       text-decoration: none;
       border-radius: 5px;
     }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.3);
+      z-index: 0;
+    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body {% if background %}style="background-image: url('{{ url_for('static', filename=background) }}'); background-size: cover;"{% endif %}>
@@ -49,6 +65,8 @@
     <!-- Основний блок тренувань -->
     <div style="flex: 3;">
       <h1>🔥 Тренування</h1>
+
+      <p>Виконано днів: {{ workouts | selectattr('done') | select | list | length }} з {{ workouts|length }}</p>
 
       {% if workouts %}
         {% for workout in workouts %}
@@ -66,7 +84,7 @@
             </ul>
 
             {% if not workout.done %}
-              <a class="button" href="/complete/{{ workout.date }}">✅ Завершити день</a>
+              <a class="button" href="{{ url_for('complete', day=workout.date) }}">✅ Завершити день</a>
             {% else %}
               <p style="color: lightgreen;">✅ Виконано</p>
             {% endif %}
