@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Тренування</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body {% if background %}style="background-image: url('{{ url_for('static', filename=background) }}');"{% endif %}>
+  <div class="overlay"></div>
+
+  <div class="container">
+    <!-- Основний блок тренувань -->
+    <div style="flex: 3;">
+      <h1>🔥 Тренування</h1>
+      <p>Виконано днів: {{ workouts | selectattr('done') | select | list | length }} з {{ workouts|length }}</p>
+
+      {% if workouts %}
+        {% for workout in workouts %}
+          <div class="day {% if workout.done %}done{% endif %}">
+            <h2>{{ workout.date }}</h2>
+            <h3>{{ workout.title }}</h3>
+            <ul>
+              {% for ex in workout.exercises %}
+                <li>
+                  {{ ex.name }} —
+                  {% if ex.reps %}{{ ex.reps }}{% endif %}
+                  {% if ex.time %}{{ ex.time }}{% endif %}, {{ ex.sets }}
+                </li>
+              {% endfor %}
+            </ul>
+
+            {% if not workout.done %}
+              <a class="button" href="{{ url_for('complete', day=workout.date) }}">✅ Завершити день</a>
+            {% else %}
+              <p style="color: lightgreen;">✅ Виконано</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>Немає доступних тренувань.</p>
+      {% endif %}
+    </div>
+
+    <!-- Блок харчування + жироспалення -->
+    <aside>
+      <h2>🍽️ Харчування для спалювання жиру</h2>
+      <ul>
+        {% for item in nutrition %}
+          <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+      <p><strong>Порада:</strong> Один день на тиждень — легка активність або відпочинок.</p>
+
+      <h2>🔥 Вправи для спалювання жиру на животі</h2>
+      {% set belly_exercises = [
+        {"name": "Скручування", "reps": "20", "sets": "3 підходи"},
+        {"name": "Планка", "time": "30–60 сек", "sets": "3 підходи"},
+        {"name": "Підйом ніг лежачи", "reps": "15", "sets": "3 підходи"},
+        {"name": "Велосипед", "time": "30 сек", "sets": "3 підходи"},
+        {"name": "Планка з дотиком плечей", "time": "30 сек", "sets": "3 підходи"},
+        {"name": "Планка з підйомом ноги", "time": "30 сек", "sets": "3 підходи"},
+        {"name": "Пульсуючі скручування", "reps": "25", "sets": "3 підходи"},
+        {"name": "V-підйоми", "reps": "15", "sets": "3 підходи"},
+        {"name": "Планка боком", "time": "30 сек", "sets": "2 підходи"}
+      ] %}
+      {% set current_week = ((workouts | length) // 7) + 1 %}
+      <ul>
+        {% for ex in belly_exercises[:current_week + 2] %}
+          <li>
+            {{ ex.name }} —
+            {% if ex.reps %}{{ ex.reps }}{% endif %}
+            {% if ex.time %}{{ ex.time }}{% endif %}, {{ ex.sets }}
+          </li>
+        {% endfor %}
+      </ul>
+    </aside>
+  </div>
+</body>
+</html>
