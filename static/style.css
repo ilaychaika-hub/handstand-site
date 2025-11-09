@@ -117,6 +117,43 @@ li {
   animation: pulse 1.5s infinite;
 }
 
+/* Стрілки */
+.scroll-arrow-down {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 32px;
+  text-decoration: none;
+  animation: bounce 2s infinite;
+  z-index: 10;
+}
+
+.scroll-arrow-up {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 32px;
+  text-decoration: none;
+  display: none;
+  animation: fadeIn 0.5s ease-in-out;
+  z-index: 10;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
@@ -152,24 +189,5 @@ li {
 
   li {
     font-size: 14px;
-  }
-}
-.scroll-arrow {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 32px;
-  text-decoration: none;
-  animation: bounce 2s infinite;
-  z-index: 10;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateX(-50%) translateY(0);
-  }
-  50% {
-    transform: translateX(-50%) translateY(10px);
   }
 }

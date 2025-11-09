@@ -13,6 +13,10 @@
   </style>
 </head>
 <body>
+  <!-- Стрілки -->
+  <a href="#scroll-target" class="scroll-arrow-down">⬇️</a>
+  <a href="#" class="scroll-arrow-up" id="scrollUp">⬆️</a>
+
   <div class="container">
     <div class="main">
       <h1>🔥 Тренування</h1>
@@ -51,9 +55,8 @@
         </div>
       {% endfor %}
     </div>
-    
-<aside id="scroll-target">
-    <aside>
+
+    <aside id="scroll-target">
       <h2>🍽️ Харчування</h2>
       <ul>
         {% for item in nutrition %}
@@ -80,5 +83,17 @@
       {% endif %}
     </aside>
   </div>
+
+  <!-- JavaScript для стрілки вгору -->
+  <script>
+    const scrollUp = document.getElementById("scrollUp");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        scrollUp.style.display = "block";
+      } else {
+        scrollUp.style.display = "none";
+      }
+    });
+  </script>
 </body>
 </html>
