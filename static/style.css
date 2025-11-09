@@ -123,7 +123,34 @@ li {
     padding: 10px;
   }
 
-  aside {
-    order: -1;
+  .main, aside {
+    width: 100%;
+    min-width: unset;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .streak {
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .day {
+    padding: 10px;
+  }
+
+  .button {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  li {
+    font-size: 14px;
   }
 }
