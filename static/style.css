@@ -118,26 +118,35 @@ li {
 }
 
 /* Стрілки */
-.scroll-arrow-down {
+.scroll-arrow-down,
+.scroll-arrow-up {
   position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
   font-size: 32px;
+  color: white;
+  background: none;
+  border: none;
   text-decoration: none;
-  animation: bounce 2s infinite;
+  cursor: pointer;
   z-index: 10;
 }
 
+.scroll-arrow-down {
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s infinite;
+}
+
 .scroll-arrow-up {
-  position: fixed;
   bottom: 20px;
   right: 20px;
-  font-size: 32px;
-  text-decoration: none;
   display: none;
   animation: fadeIn 0.5s ease-in-out;
-  z-index: 10;
+}
+
+.scroll-arrow-down:focus,
+.scroll-arrow-up:focus {
+  outline: none;
 }
 
 @keyframes bounce {
@@ -187,7 +196,3 @@ li {
     font-size: 16px;
   }
 
-  li {
-    font-size: 14px;
-  }
-}
